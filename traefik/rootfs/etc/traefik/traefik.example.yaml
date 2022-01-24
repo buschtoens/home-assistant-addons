@@ -12,6 +12,8 @@ api:
   insecure: true
 
 entryPoints:
+  traefik:
+    address: '127.0.0.1:${INGRESS_PORT}'
   http:
     address: ':80'
   https:

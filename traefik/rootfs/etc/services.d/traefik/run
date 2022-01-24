@@ -8,6 +8,8 @@ if [ ! -f "${CONFIG_FILE}" ]; then
   exit 1
 fi
 
+bashio::string.replace "$(cat "${CONFIG_FILE}")" '${INGRESS_PORT}' "$(bashio::addon.ingress_port)" > /etc/traefik/traefik.yaml
+
 bashio::log.info "Starting Traefik..."
 
-/usr/local/bin/traefik --configFile "${CONFIG_FILE}"
+/usr/local/bin/traefik

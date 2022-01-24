@@ -10,6 +10,8 @@
   "url": "https://github.com/buschtoens/home-assistant-addons/tree/main/traefik",
   "ingress": true,
   "ingress_entry": "dashboard/",
+  "ingress_port": 0,
+  "ingress_stream": true,
   "host_network": true,
   "hassio_role": "default",
   "hassio_api": true,
