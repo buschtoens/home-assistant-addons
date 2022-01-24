@@ -1,0 +1,27 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+log:
+  level: INFO
+
+accessLog: {}
+
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  http:
+    address: ':80'
+  https:
+    address: ':443'
+
+providers:
+  file:
+    watch: true
+    directory: /config/traefik
+  docker:
+    watch: true
+    exposedByDefault: false
+    defaultRule: Host(`{{ normalize .Name }}`)

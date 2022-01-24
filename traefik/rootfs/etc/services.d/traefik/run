@@ -1,17 +1,13 @@
 #!/usr/bin/with-contenv bashio
 
-ENV_VARS=$(gomplate -d options=/data/options.json -i '{{ range (ds "options").env_vars }}{{ . }} {{ end }}')
+CONFIG_FILE=$(bashio::config 'config_file')
 
-if [ -z "$ENV_VARS" ]; then
-    bashio::log.info "No additional environment variables found"
-else
-    bashio::log.info "Extracted variables ${ENV_VARS}"
+if [ ! -f "${CONFIG_FILE}" ]; then
+  bashio::log.fatal "Config file not found at '${CONFIG_FILE}'."
+  bashio::log.notice "Example configuration:\n\n$(cat /etc/traefik/traefik.example.yaml)"
+  exit 1
 fi
 
 bashio::log.info "Starting Traefik..."
-if [ -z "$ENV_VARS" ]; then
-    bashio::log.info "Running Traefik without env_vars"
-    exec /usr/local/bin/traefik
-else
-    env $ENV_VARS /usr/local/bin/traefik
-fi
+
+/usr/local/bin/traefik --configFile "${CONFIG_FILE}"
