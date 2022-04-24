@@ -7,6 +7,7 @@
     "i386": "hassioaddons/base"
   },
   "args": {
-    "TRAEFIK_VERSION": "2.6.3"
+    "TRAEFIK_VERSION": "2.6.3",
+    "CERTS_DUMPER_VERSION": "2.8.1"
   }
 }

@@ -4,6 +4,7 @@ FROM $BUILD_FROM
 
 ARG BUILD_ARCH
 ARG TRAEFIK_VERSION
+ARG CERTS_DUMPER_VERSION
 
 RUN if [ "${BUILD_ARCH}" == "aarch64" ]; then BUILD_ARCH=arm64; \
     elif [ "${BUILD_ARCH}" == "i386" ]; then BUILD_ARCH=386; \
@@ -12,7 +13,10 @@ RUN if [ "${BUILD_ARCH}" == "aarch64" ]; then BUILD_ARCH=arm64; \
     apk add --no-cache nginx jq && \
     wget --quiet -O - "https://github.com/traefik/traefik/releases/download/v${TRAEFIK_VERSION}/traefik_v${TRAEFIK_VERSION}_linux_${BUILD_ARCH}.tar.gz" \
       | tar xzvf - -C /usr/local/bin traefik && \
-    chmod +x /usr/local/bin/traefik
+    chmod +x /usr/local/bin/traefik && \
+    wget --quiet -O - "https://github.com/ldez/traefik-certs-dumper/releases/download/v${CERTS_DUMPER_VERSION}/traefik-certs-dumper_v${CERTS_DUMPER_VERSION}_linux_${BUILD_ARCH}.tar.gz" \
+      | tar xzvf - -C /usr/local/bin traefik-certs-dumper && \
+    chmod +x /usr/local/bin/traefik-certs-dumper
 
 COPY rootfs /
 
