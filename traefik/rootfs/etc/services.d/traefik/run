@@ -1,6 +1,5 @@
 #!/usr/bin/with-contenv bashio
 
-OPTIONS_FILE="/data/options.json"
 CONFIG_FILE=$(bashio::config 'config_file')
 
 if [ ! -f "${CONFIG_FILE}" ]; then
@@ -11,7 +10,7 @@ fi
 
 bashio::string.replace "$(cat "${CONFIG_FILE}")" '${INGRESS_PORT}' "$(bashio::addon.ingress_port)" > /etc/traefik/traefik.yaml
 
-ENV_VARS=$(cat "${OPTIONS_FILE}" | jq -r \
+ENV_VARS=$(cat "${__BASHIO_ADDON_CONFIG}" | jq --raw-output \
   '.env_vars[]? | "\(.key)=\(.value)"'
 )
 
