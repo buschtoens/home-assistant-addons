@@ -19,9 +19,16 @@
   "panel_icon": "mdi:earth-arrow-right",
   "map": ["config", "share", "ssl:rw"],
   "options": {
-    "config_file": "/config/traefik.yaml"
+    "config_file": "/config/traefik.yaml",
+    "env_vars": []
   },
   "schema": {
-    "config_file": "str"
+    "config_file": "str",
+    "env_vars": [
+      {
+        "key": "str",
+        "value": "str"
+      }
+    ]
   }
 }

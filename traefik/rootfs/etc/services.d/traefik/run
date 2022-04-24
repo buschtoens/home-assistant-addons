@@ -1,5 +1,6 @@
 #!/usr/bin/with-contenv bashio
 
+OPTIONS_FILE="/data/options.json"
 CONFIG_FILE=$(bashio::config 'config_file')
 
 if [ ! -f "${CONFIG_FILE}" ]; then
@@ -10,6 +11,20 @@ fi
 
 bashio::string.replace "$(cat "${CONFIG_FILE}")" '${INGRESS_PORT}' "$(bashio::addon.ingress_port)" > /etc/traefik/traefik.yaml
 
+ENV_VARS=$(cat "${OPTIONS_FILE}" | jq -r \
+  '.env_vars[]? | "\(.key)=\(.value)"'
+)
+
+if [ -z "${ENV_VARS}" ]; then
+  bashio::log.info "No additional environment variables defined."
+else
+  bashio::log.info "Additional environment variables:\n$(sed 's;=.*;;' <<< $ENV_VARS)"
+fi
+
 bashio::log.info "Starting Traefik..."
 
-/usr/local/bin/traefik
+if [ -z "${ENV_VARS}" ]; then
+  exec /usr/local/bin/traefik
+else
+  env "${ENV_VARS}" /usr/local/bin/traefik
+fi
