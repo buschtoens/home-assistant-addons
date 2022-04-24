@@ -24,6 +24,7 @@
   },
   "schema": {
     "config_file": "str",
+    "export_certs": "str?",
     "env_vars": [
       {
         "key": "str",

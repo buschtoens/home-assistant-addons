@@ -1,0 +1,26 @@
+#!/usr/bin/with-contenv bashio
+
+if ! bashio::config.has_value "export_certs"; then
+  bashio::log.info "Certificate export disabled."
+  exit 0
+fi
+
+CERTS_FILE=$(bashio::config 'export_certs')
+DEST="$(dirname "${CERTS_FILE}")/$(basename "${CERTS_FILE}" .json)"
+
+bashio::log.notice "Certificate export enabled: ${CERTS_FILE} -> ${DEST}"
+
+while [ ! -f "${CERTS_FILE}" ]; do
+  bashio::log.info "Certificate file not found. Waiting for 2 seconds..."
+  sleep 2
+done
+
+exec /usr/local/bin/traefik-certs-dumper file \
+  --version v2 \
+  --watch \
+  --clean \
+  --domain-subdir \
+  --crt-ext .pem --crt-name fullchain \
+  --key-ext .pem --key-name privkey \
+  --source "${CERTS_FILE}" \
+  --dest "${DEST}"
